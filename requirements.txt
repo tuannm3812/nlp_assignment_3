@@ -5,5 +5,5 @@ keras
 scikit-learn
 tqdm
 scipy
-# Note: The labs reference a custom package 'ai_foundations' and 'gemma' 
-# installed via git. These instructions should be in the README.
+streamlit
+plotly

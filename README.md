@@ -1,74 +1,80 @@
 ![AfriWeave Banner](https://jenmansafaris.com/wp-content/uploads/2014/08/african-culture-banner.jpg)
 
-# AfriWeave: A Culturally-Adaptive Small Language Model (SLM)
+# AfriWeave
 
-> **Assessment Task 2: End-to-End NLP Project submission.**
+![Python](https://img.shields.io/badge/Python-3.11-blue)
+![Streamlit](https://img.shields.io/badge/Streamlit-App-ff4b4b)
+![Keras](https://img.shields.io/badge/Keras-JAX-d00000)
+![Tests](https://img.shields.io/badge/Tests-Pytest-0a7f42)
+![Status](https://img.shields.io/badge/Status-Prototype-orange)
 
-![Python](https://img.shields.io/badge/Python-3.9%2B-blue)
-![Libraries](https://img.shields.io/badge/Libraries-JAX%20%7C%20Keras%20%7C%20Streamlit%20%7C%20Plotly-green)
-![Status](https://img.shields.io/badge/Status-Complete-success)
+AfriWeave is an interactive NLP prototype for exploring culturally focused text generation. It combines corpus exploration, a transparent N-gram baseline, a small BPE tokenizer, and a transformer architecture scaffold inside a Streamlit application.
 
-## 📄 Project Overview
+The project is intentionally lightweight: it is suitable for demos, portfolio review, and experimentation without requiring large model weights.
 
-**AfriWeave** is an end-to-end Natural Language Processing application designed to address the underrepresentation of African cultural narratives in generic Large Language Models.
+## Features
 
-This project demonstrates the complete lifecycle of building a specialized **Small Language Model (SLM)** from scratch. By moving beyond simple statistical approaches (N-grams) and implementing a custom **Transformer** architecture with specialized **BPE Tokenization**, AfriWeave generates culturally coherent text based on the *Africa Galore* dataset.
+- Corpus exploration for the Africa Galore dataset
+- N-gram phrase frequency visualization
+- Deterministic word-level N-gram text generation baseline
+- Trainable Byte Pair Encoding tokenizer
+- Keras/JAX transformer architecture components
+- Streamlit interface for exploration and generation
 
-This repository combines multiple lab exercises into a unified, deployable web application.
-
----
-
-## 🏗️ Repository Structure
-
-The project is separated into backend logic (`modules/`) and a frontend web interface (`streamlit_app/`).
+## Project Structure
 
 ```text
-nlp_assignment_2/
-├── modules/                  # --- The Backend Logic ---
-│   ├── module_1_stats.py     # Course 1: N-Gram probability models
-│   ├── module_2_data.py      # Course 2: BPE Tokenization & Embedding analysis
-│   ├── module_3_nn.py        # Course 3: MLP Network Design
-│   └── module_4_transformer.py # Course 4: Attention Mechanism & Transformer architecture
-│
-├── streamlit_app/            # --- The Frontend Interface ---
-│   ├── app.py                # Main dashboard landing page
-│   └── pages/
-│       ├── 1_Exploration.py  # Interactive EDA (N-grams & t-SNE visualization)
-│       └── 2_Generator.py    # Text generation interface comparing models
-│
-├── requirements.txt          # Project dependencies
-└── README.md                 # Project documentation
+.
+|-- modules/
+|   |-- module_1_stats.py         # Dataset loading and N-gram model
+|   |-- module_2_data.py          # BPE tokenizer and embedding utilities
+|   |-- module_3_nn.py            # Feed-forward neural model builder
+|   `-- module_4_transformer.py   # Multi-head attention and transformer scaffold
+|-- streamlit_app/
+|   |-- app.py                    # Main Streamlit dashboard
+|   `-- pages/
+|       |-- 1_Exploration.py      # Corpus and phrase analysis
+|       `-- 2_Generator.py        # Text generation interface
+|-- tests/                        # Unit and smoke tests
+|-- pyproject.toml                # Project metadata and tooling config
+|-- requirements.txt              # Runtime dependencies
+`-- README.md
 ```
 
-## 🚀 Getting Started
+## Getting Started
 
-### 1. Installation
-
-Clone the repository and install the required dependencies.
+Create a virtual environment and install dependencies:
 
 ```bash
-git clone https://github.com/tuannm3812/nlp_assignment_3
-cd nlp_assignment_3
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 ```
 
-### 2. Running the Application
-Launch the Streamlit web interface from the project root directory.
+Run the application:
 
 ```bash
 streamlit run streamlit_app/app.py
 ```
 
-The application will open in your default web browser at http://localhost:8501.
+The app will be available at http://localhost:8501.
 
-## ✨ Key Features (Assessment Criteria)
-This project fulfills the AT2 requirements by integrating the following technical components:
+## Development
 
-**Data Pipeline & EDA:** Automated cleaning of the Africa Galore dataset and interactive visualization of N-gram frequencies and semantic word embeddings (t-SNE).
+Install test tooling:
 
-**Custom Tokenization:** Implementation of a Byte Pair Encoding (BPE) tokenizer to handle cultural terminology efficiently.
+```bash
+pip install -e ".[dev]"
+```
 
-**Model Comparison:** A side-by-side comparison in the UI between a baseline statistical N-Gram model and a modern neural Transformer architecture.
+Run tests:
 
-**Deep Learning Implementation:** Utilization of JAX and Keras to build multi-head attention mechanisms and transformer blocks from first principles.
+```bash
+pytest
+```
 
+## Notes
+
+The Africa Galore dataset is loaded from its public remote source. If the remote data is unavailable, AfriWeave falls back to a small built-in sample corpus so the app remains usable during demos.
+
+The transformer path currently provides architecture code and a simulated UI generation path. To turn it into a full neural generator, add training scripts, checkpoint loading, and decoding logic.
