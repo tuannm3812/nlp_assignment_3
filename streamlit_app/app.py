@@ -1,59 +1,65 @@
-import streamlit as st
+from pathlib import Path
 import sys
-import os
 
-# Add parent dir to path so we can import modules
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+import streamlit as st
+
+ROOT_DIR = Path(__file__).resolve().parents[1]
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
 
 from modules.module_1_stats import NGramModel, load_africa_galore
 from modules.module_2_data import BPETokenizer
-# from modules.module_4_transformer import build_transformer_slm (Uncomment when ready)
+
 
 st.set_page_config(page_title="AfriWeave AI", layout="wide")
 
-st.title("AfriWeave: End-to-End SLM Project")
-st.sidebar.info("Assessment Task 2 Submission")
+st.title("AfriWeave: Cultural Text Generation Studio")
+st.sidebar.info("Interactive NLP prototype")
 
-# Tabs for the Assignment Structure
-tab1, tab2, tab3 = st.tabs(["1. Data & Stats", "2. Tokenization Lab", "3. Model Generation"])
+tab1, tab2, tab3 = st.tabs(["Data & Statistics", "Tokenization", "Model Generation"])
 
-# --- TAB 1: N-Gram Baseline (Course 1) ---
 with tab1:
-    st.header("Baseline: N-Gram Model")
-    st.markdown("Comparing traditional statistical approaches.")
-    
+    st.header("Baseline N-Gram Model")
+    st.markdown("Train a transparent statistical model and inspect how it extends short prompts.")
+
     if st.button("Train N-Gram Model"):
         data = load_africa_galore()
-        model = NGramModel(n=3)
+        model = NGramModel(n=3, seed=42)
         model.train(data)
-        st.session_state['ngram_model'] = model
-        st.success("Trained on Africa Galore dataset!")
+        st.session_state["ngram_model"] = model
+        st.success("N-Gram model trained.")
 
     prompt = st.text_input("Enter prompt:", "Jide cooked")
-    if 'ngram_model' in st.session_state:
+    if "ngram_model" in st.session_state:
         if st.button("Generate (N-Gram)"):
-            res = st.session_state['ngram_model'].generate(prompt)
-            st.write(f"**Result:** {res}")
+            result = st.session_state["ngram_model"].generate(prompt)
+            st.write(f"**Result:** {result}")
     else:
-        st.warning("Please train the model first.")
+        st.warning("Train the model to enable generation.")
 
-# --- TAB 2: Tokenization (Course 2) ---
 with tab2:
     st.header("BPE Tokenization Engine")
-    st.markdown("Visualizing how the machine reads text.")
-    
-    user_text = st.text_area("Test Text:", "Jollof rice is delicious.")
-    
-    # Mocking the BPE visualization for the demo
-    st.code(f"Input: {user_text}")
-    st.write("Tokens: `['Jollof', 'Ġrice', 'Ġis', 'Ġdelicious', '.']`")
-    st.caption("Note: 'Ġ' represents a space in BPE.")
+    st.markdown("Learn merge rules from the demo corpus and inspect token pieces.")
 
-# --- TAB 3: Transformer (Course 4) ---
+    user_text = st.text_area("Test Text:", "Jollof rice is delicious.")
+    if st.button("Train Tokenizer"):
+        tokenizer = BPETokenizer(vocab_size=200)
+        tokenizer.train(load_africa_galore())
+        st.session_state["tokenizer"] = tokenizer
+        st.success(f"Tokenizer trained with {len(tokenizer.merges)} merges.")
+
+    st.code(f"Input: {user_text}")
+    if "tokenizer" in st.session_state:
+        st.write("Tokens:", st.session_state["tokenizer"].tokenize(user_text))
+    else:
+        st.caption("Train the tokenizer to view learned BPE pieces.")
+
 with tab3:
     st.header("Transformer SLM")
-    st.markdown("The final Small Language Model output.")
-    st.image("https://upload.wikimedia.org/wikipedia/commons/3/3b/Attention-mechanism-for-transformer.png", caption="Attention Mechanism Implemented")
-    
-    st.info("Load the weights to generate text using the Transformer architecture.")
-    # Here you would load the keras model from module_4 and predict
+    st.markdown("Prototype architecture for a compact self-attention language model.")
+    st.image(
+        "https://upload.wikimedia.org/wikipedia/commons/3/3b/Attention-mechanism-for-transformer.png",
+        caption="Scaled dot-product attention",
+    )
+
+    st.info("The repository includes the architecture code. Add trained weights to enable neural generation.")
